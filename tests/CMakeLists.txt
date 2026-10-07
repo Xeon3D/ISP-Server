@@ -1,4 +1,4 @@
-# 86Box-Next: the virtual ISP (isp-server/) -- framing, the PPP
+# ISP-Server: the virtual ISP -- framing, the PPP
 # automaton, and whole sessions through libslirp to the host's loopback.
 # No test framework; non-zero on failure.  Offline.
 if(BUILD_TESTING)
@@ -32,7 +32,7 @@ if(BUILD_TESTING)
     # The status page's phone: the test is the page (a WebSocket) and a
     # modem on the exchange.
     add_executable(web_phone_tests web_phone_test.c)
-    target_include_directories(web_phone_tests PRIVATE ${ISP_NEXT_ROOT}/src/include)
+    target_include_directories(web_phone_tests PRIVATE ${ISP_ROOT}/include)
     target_link_libraries(web_phone_tests PRIVATE isp_srv isp_web isp)
     add_test(NAME Isp.web_phone COMMAND web_phone_tests)
 

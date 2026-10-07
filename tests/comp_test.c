@@ -1,5 +1,5 @@
 /*
- * 86Box-Next: CCP's compressors and decompressors (isp-server/ppp_comp.c),
+ * 86Box-Next: CCP's compressors and decompressors (ppp_comp.c),
  * each paired with itself: MPPC, MPPE at each strength, stateful and
  * stateless, the two together, Deflate, BSD-Compress at several code sizes
  * and Predictor-1.  Packets of text, of noise (sent as they are, the

@@ -443,7 +443,12 @@ isp_ui_open(int minimized)
          (si.wShowWindow == SW_SHOWMINNOACTIVE) || (si.wShowWindow == SW_HIDE)))
         minimized = 1;
 
-    *(FARPROC *) &get_dpi_for_window = GetProcAddress(GetModuleHandleW(L"user32.dll"), "GetDpiForWindow");
+    {
+        /* (Windows 10 1607 and later; the screen's DPI before that.) */
+        const FARPROC fn = GetProcAddress(GetModuleHandleW(L"user32.dll"), "GetDpiForWindow");
+
+        memcpy(&get_dpi_for_window, &fn, sizeof(fn));
+    }
     msg_taskbar_created = RegisterWindowMessageW(L"TaskbarCreated");
     edit_bg             = GetSysColorBrush(COLOR_WINDOW);
 

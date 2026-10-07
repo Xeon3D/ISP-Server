@@ -1,9 +1,9 @@
-# 86Box-Next: isp-server for macOS (Apple Silicon and Intel) and Linux
-# (static, x86-64 and arm64), each with its tests.  Run by hand (Actions >
-# isp-server > Run workflow); with a release tag given, the zips are added to
-# that release too.  Windows' isp-server.exe comes with the emulator's
-# releases (tools/make-release.sh); the container is isp-server/Dockerfile.
-name: isp-server
+# ISP-Server for macOS (Apple Silicon and Intel) and Linux (static, x86-64
+# and arm64), each with its tests.  Run by hand (Actions > build > Run
+# workflow); with a release tag given, the archives are added to that
+# release too.  Windows' isp-server.exe is built with MSYS2 (see README.md);
+# the container is the Dockerfile.
+name: build
 
 on:
   workflow_dispatch:
@@ -29,18 +29,11 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            COPYING
-            isp-server
-            src/char/modem_voice.c
-            src/include/86box/modem_voice.h
-          sparse-checkout-cone-mode: false
       - name: Dependencies
         run: brew install cmake ninja pkgconf libslirp glib dylibbundler
       - name: Build and test
         run: |
-          cmake -S isp-server -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
           cmake --build build
           ctest --test-dir build --output-on-failure
       - name: Package (the Homebrew libraries beside it)
@@ -66,7 +59,7 @@ jobs:
       - name: Build and test, static (x86-64 and arm64)
         run: |
           for arch in amd64 arm64; do
-            docker buildx build --platform linux/$arch -f isp-server/Dockerfile --target linux-binary --output out-$arch .
+            docker buildx build --platform linux/$arch --target linux-binary --output out-$arch .
             mkdir -p dist-$arch/isp-server
             cp out-$arch/isp-server COPYING dist-$arch/isp-server/
             tar -C dist-$arch -czf isp-server-linux-$arch.tar.gz isp-server

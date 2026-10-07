@@ -4,7 +4,7 @@
 # ctest: it needs root (pppd makes ppp interfaces), pppd, socat, curl,
 # python3 and the kernel's ppp modules.
 #
-#   sudo isp-server/tests/pppd_interop.sh path/to/isp-server
+#   sudo tests/pppd_interop.sh path/to/isp-server
 #
 # Each case: isp-server configured by an .ini, pppd dialling it over a pty
 # and socat, then pings to the ISP's gateway, a 2 MB download (text, then

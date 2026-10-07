@@ -1,11 +1,12 @@
-# 86Box-Next ISP (isp-server)
+# ISP-Server (86Box-Next ISP)
 
 The virtual dial-up ISP and telephone exchange for
 [86Box-Next](https://github.com/Xeon3D/86Box-Next)'s emulated modems. A guest
 dials in over its modem and gets PPP, an address, DNS and NAT to the
 Internet; modems on the "Telephone network" line get phone numbers and can
 call each other. It runs on its own: on the same PC as the emulator, or
-hosted somewhere others can dial.
+hosted somewhere others can dial. (It grew up inside 86Box-Next, which
+carries this repository as its `isp-server` submodule.)
 
 **No support, AI coded:** like the rest of 86Box-Next, this is written with
 AI help and comes as it is.
@@ -31,7 +32,7 @@ AI help and comes as it is.
   forwards, an optional modem-speed throttle.
 
 Tested against Linux's own PPP (pppd and the kernel's MPPE, Deflate,
-BSD-Compress and Multilink): `tests/pppd_interop.sh`.
+BSD-Compress and Multilink): `tests/pppd_interop.sh`, as root.
 
 ## The status page
 
@@ -49,12 +50,13 @@ in its log; from then on everyone logs in. The super admin adds **admins**
 
 ## Running it
 
-- **Windows**: `isp-server.exe` comes with 86Box-Next's releases. It is a
-  window with the log that minimizes to the notification area.
+- **Windows**: `isp-server.exe` (in this repository's releases and
+  86Box-Next's). It is a window with the log that minimizes to the
+  notification area.
 - **Linux**: a static binary, no libraries needed:
   `./isp-server --help`.
 - **macOS**: `isp-server` with its libraries beside it, Apple Silicon or
-  Intel (built by the repository's `isp-server` workflow).
+  Intel (built by this repository's `build` workflow).
 - **Docker** (`xeon3d/86box-next-isp`, amd64 and arm64):
 
   ```sh
@@ -74,14 +76,19 @@ clear, and so the browser phone can use the microphone.
 
 ## Building
 
-From the repository's root (it needs `src/char/modem_voice.c` beside it),
-with CMake, pkg-config, libslirp, glib and zlib:
+With CMake, pkg-config, libslirp, glib and zlib (on Windows, MSYS2 UCRT64:
+`mingw-w64-ucrt-x86_64-{cmake,ninja,pkgconf,libslirp,glib2,zlib}`;
+`-DSTATIC_BUILD=ON` there gives one exe with no DLLs):
 
 ```sh
-cmake -S isp-server -B build-isp -DBUILD_TESTING=ON
-cmake --build build-isp
-ctest --test-dir build-isp
+cmake -S . -B build -DBUILD_TESTING=ON
+cmake --build build
+ctest --test-dir build
 ```
 
-`docker build -f isp-server/Dockerfile .` builds the container;
-`--target linux-binary --output out` instead gives the static Linux binary.
+`docker build .` builds the container; `docker build --target linux-binary
+--output out .` gives the static Linux binary instead.
+
+`voice/modem_voice.c` and `include/86box/modem_voice.h` are copies of
+86Box-Next's (the modems' voice frames, which the exchange and the
+browser phone speak): keep them in step with it.

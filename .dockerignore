@@ -1,0 +1,5 @@
+# What the image does not need.
+.git
+.github
+build*/
+out*/

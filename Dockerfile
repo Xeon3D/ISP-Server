@@ -1,10 +1,9 @@
 # syntax=docker/dockerfile:1.7
 #
-# 86Box-Next: isp-server in a container -- the virtual ISP and telephone
-# exchange that 86Box-Next's modems dial, with its status page.  Built from
-# the repository's root (it needs src/char/modem_voice.c beside it):
+# ISP-Server in a container -- the virtual ISP and telephone exchange that
+# 86Box-Next's modems dial, with its status page:
 #
-#   docker build -f isp-server/Dockerfile -t xeon3d/86box-next-isp .
+#   docker build -t xeon3d/86box-next-isp .
 #   docker run -d --name isp -p 2323:2323 -p 2324:2324 -v isp-data:/data xeon3d/86box-next-isp
 #
 # Then open http://<host>:2324/ and make the first user (the super admin)
@@ -12,7 +11,7 @@
 #
 # The same build gives a fully static Linux binary (musl), with no container:
 #
-#   docker build -f isp-server/Dockerfile --target linux-binary --output out .
+#   docker build --target linux-binary --output out .
 
 ARG ALPINE=3.22
 
@@ -29,10 +28,8 @@ RUN tar xzf /tmp/libslirp.tar.gz -C /tmp && cd /tmp/libslirp-v4.9.1 \
     && ninja -C build install
 
 WORKDIR /src
-COPY src/char/modem_voice.c src/char/
-COPY src/include/86box/modem_voice.h src/include/86box/
-COPY isp-server/ isp-server/
-RUN cmake -S isp-server -B /build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSTATIC_BUILD=ON -DBUILD_TESTING=ON \
+COPY . .
+RUN cmake -S . -B /build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSTATIC_BUILD=ON -DBUILD_TESTING=ON \
     && cmake --build /build \
     && cd /build && ctest --output-on-failure \
     && strip /build/isp-server \
@@ -46,7 +43,7 @@ COPY --from=build /build/isp-server /isp-server
 FROM alpine:${ALPINE}
 LABEL org.opencontainers.image.title="86Box-Next ISP" \
       org.opencontainers.image.description="The virtual ISP and telephone exchange for 86Box-Next's modems: PPP with PAP, CHAP and MS-CHAP, MPPE, compression, Multilink, NAT, and a status page with logins." \
-      org.opencontainers.image.source="https://github.com/Xeon3D/86Box-Next" \
+      org.opencontainers.image.source="https://github.com/Xeon3D/ISP-Server" \
       org.opencontainers.image.licenses="GPL-2.0-or-later"
 RUN apk add --no-cache tini \
     && adduser -D -H -u 10086 isp \

@@ -1,22 +1,21 @@
 #
-# 86Box-Next: isp-server, the virtual ISP -- a PPP server and a libslirp NAT
-# per call, with a status and control page in the browser -- and the
-# telephone exchange.  A program of its own, kept out of src/: the emulator's
-# modems reach it over their TCP line and are not linked with any of this.
-# The `isp` library (the core) and `isp_web` (the page) depend on nothing of
-# the emulator's, so the tests link them on their own; the exchange borrows
-# the modems' voice frames (src/char/modem_voice.c).
+# ISP-Server (86Box-Next ISP): the virtual ISP -- a PPP server and a
+# libslirp NAT per call, with a status and control page in the browser --
+# and the telephone exchange that 86Box-Next's modems dial over their TCP
+# line.  The `isp` library (the core) and `isp_web` (the page) stand alone,
+# so the tests link them on their own; the exchange speaks the modems' voice
+# frames (voice/modem_voice.c, a copy of 86Box-Next's src/char/modem_voice.c:
+# keep the two in step).
 #
 # On Windows it is a window, not a console: a log that minimizes to the
 # notification area (isp_ui_win.c).  Elsewhere it logs to the terminal
 # (isp_ui_term.c).
 #
-# libslirp by plain link flags rather than the PkgConfig::SLIRP imported
-# target, which is only visible below src/network, not to tests/.
+# libslirp by plain link flags rather than an imported target, so that a
+# project including this one (86Box-Next, as its isp-server submodule) and
+# its tests see them too.
 #
-# It also builds on its own, for Linux, macOS and the container -- only the
-# repository's src/ beside it is needed, for modem_voice:
-#   cmake -S isp-server -B build-isp && cmake --build build-isp
+# On its own:  cmake -S . -B build && cmake --build build
 #
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     cmake_minimum_required(VERSION 3.16)
@@ -36,7 +35,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     include(GNUInstallDirs)
     set(ISP_STANDALONE 1)
 endif()
-get_filename_component(ISP_NEXT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+set(ISP_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(ISP_SLIRP REQUIRED slirp)
@@ -115,9 +114,9 @@ target_link_libraries(isp_web PUBLIC isp)
 
 # The server: listeners, ISP calls, the telephone exchange, the .ini -- and
 # the status page's phone, which speaks the modems' voice frames
-# (src/char/modem_voice.c).
-add_library(isp_srv OBJECT isp_srv.c isp_phone.c ${ISP_NEXT_ROOT}/src/char/modem_voice.c)
-target_include_directories(isp_srv PRIVATE ${ISP_NEXT_ROOT}/src/include)
+# (voice/modem_voice.c).
+add_library(isp_srv OBJECT isp_srv.c isp_phone.c voice/modem_voice.c)
+target_include_directories(isp_srv PRIVATE ${ISP_ROOT}/include)
 target_link_libraries(isp_srv PUBLIC isp_web isp)
 
 if(WIN32)

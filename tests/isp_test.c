@@ -1,5 +1,5 @@
 /*
- * 86Box-Next: the virtual ISP (isp-server/).  No test framework;
+ * 86Box-Next: the virtual ISP.  No test framework;
  * non-zero on failure.
  *
  *   framing   RFC 1662 against an independent bitwise FCS and the CRC-16/X-25
