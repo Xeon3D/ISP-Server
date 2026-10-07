@@ -28,7 +28,7 @@ jobs:
             arch: x86_64
     runs-on: ${{ matrix.runner }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Dependencies
         run: brew install cmake ninja pkgconf libslirp glib dylibbundler
       - name: Build and test
@@ -45,7 +45,7 @@ jobs:
           dist/isp-server/isp-server --help | head -1
           cp COPYING dist/isp-server/
           cd dist && zip -r ../isp-server-macos-${{ matrix.arch }}.zip isp-server
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: isp-server-macos-${{ matrix.arch }}
           path: isp-server-macos-${{ matrix.arch }}.zip
@@ -53,7 +53,7 @@ jobs:
   linux:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
       - name: Build and test, static (x86-64 and arm64)
@@ -64,7 +64,7 @@ jobs:
             cp out-$arch/isp-server COPYING dist-$arch/isp-server/
             tar -C dist-$arch -czf isp-server-linux-$arch.tar.gz isp-server
           done
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: isp-server-linux
           path: isp-server-linux-*.tar.gz
@@ -74,7 +74,7 @@ jobs:
     needs: [macos, linux]
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           path: assets
           merge-multiple: true
