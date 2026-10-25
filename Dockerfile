@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 #
 # ISP-Server in a container -- the virtual ISP and telephone exchange that
-# 86Box-Next's modems dial, with its status page:
+# 86Box-Next2's modems dial, with its status page:
 #
 #   docker build -t xeon3d/86box-next-isp .
 #   docker run -d --name isp -p 2323:2323 -p 2324:2324 -v isp-data:/data xeon3d/86box-next-isp
@@ -41,8 +41,8 @@ COPY --from=build /build/isp-server /isp-server
 
 # ---------------------------------------------------------- the container --
 FROM alpine:${ALPINE}
-LABEL org.opencontainers.image.title="86Box-Next ISP" \
-      org.opencontainers.image.description="The virtual ISP and telephone exchange for 86Box-Next's modems: PPP with PAP, CHAP and MS-CHAP, MPPE, compression, Multilink, NAT, and a status page with logins." \
+LABEL org.opencontainers.image.title="86Box-Next2 ISP" \
+      org.opencontainers.image.description="The virtual ISP and telephone exchange for 86Box-Next2's modems: PPP with PAP, CHAP and MS-CHAP, MPPE, compression, Multilink, NAT, and a status page with logins." \
       org.opencontainers.image.source="https://github.com/Xeon3D/ISP-Server" \
       org.opencontainers.image.licenses="GPL-2.0-or-later"
 RUN apk add --no-cache tini \

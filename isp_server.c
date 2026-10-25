@@ -59,7 +59,7 @@ usage(int error)
     char text[2048];
 
     snprintf(text, sizeof(text),
-             "isp-server: the 86Box-Next virtual ISP and telephone exchange.\n"
+             "isp-server: the 86Box-Next2 virtual ISP and telephone exchange.\n"
              "\n"
              "Set a modem's line to \"Telephone network (isp-server)\": it gets a number,\n"
              "other modems can dial it, and any other number reaches the ISP.  Or point a\n"

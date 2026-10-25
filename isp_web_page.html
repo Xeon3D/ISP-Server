@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>86Box-Next ISP</title>
+<title>86Box-Next2 ISP</title>
 <style>
 :root {
   --bg: #f4f5f7; --card: #ffffff; --text: #1d2330; --muted: #667085; --line: #e3e6eb;
@@ -99,7 +99,7 @@ body:not(.super) .super-only { display: none !important; }
 <body class="ro">
 <div class="gate" id="gate-login">
   <section>
-    <h2>86Box-Next ISP</h2>
+    <h2>86Box-Next2 ISP</h2>
     <div class="sub">Log in to see and run this ISP.</div>
     <form id="login-form">
       <label>Name <input id="li-name" autocomplete="username" required></label>
@@ -111,7 +111,7 @@ body:not(.super) .super-only { display: none !important; }
 </div>
 <div class="gate" id="gate-setup">
   <section>
-    <h2>86Box-Next ISP: the first user</h2>
+    <h2>86Box-Next2 ISP: the first user</h2>
     <div class="sub">Nobody can use this page yet. The first user is the super admin, who can then add admins and viewers.</div>
     <form id="setup-form">
       <label id="su-token-l">Setup token (isp-server writes it in its log) <input id="su-token" autocomplete="off"></label>
@@ -125,7 +125,7 @@ body:not(.super) .super-only { display: none !important; }
 </div>
 
 <header>
-  <h1>86Box-Next ISP</h1>
+  <h1>86Box-Next2 ISP</h1>
   <span class="sub" id="endpoint">&nbsp;</span>
   <span class="right">
     <span class="who" id="who"></span>
@@ -903,7 +903,7 @@ function phoneShow() {
   $("ph-call").disabled = ph.state !== "idle";
   $("ph-answer").disabled = ph.state !== "ringing";
   $("ph-hang").disabled = !["calling", "ringback", "answering", "talking"].includes(ph.state);
-  document.title = ph.state === "ringing" ? "☎ " + peer + " is calling" : "86Box-Next ISP";
+  document.title = ph.state === "ringing" ? "☎ " + peer + " is calling" : "86Box-Next2 ISP";
 }
 
 function phoneEvent(m) {

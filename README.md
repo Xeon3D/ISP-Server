@@ -1,14 +1,14 @@
-# ISP-Server (86Box-Next ISP)
+# ISP-Server (86Box-Next2 ISP)
 
 The virtual dial-up ISP and telephone exchange for
-[86Box-Next](https://github.com/Xeon3D/86Box-Next)'s emulated modems. A guest
+[86Box-Next2](https://github.com/Xeon3D/86Box-Next2)'s emulated modems. A guest
 dials in over its modem and gets PPP, an address, DNS and NAT to the
 Internet; modems on the "Telephone network" line get phone numbers and can
 call each other. It runs on its own: on the same PC as the emulator, or
-hosted somewhere others can dial. (It grew up inside 86Box-Next, which
+hosted somewhere others can dial. (It grew up inside 86Box-Next2, which
 carries this repository as its `isp-server` submodule.)
 
-**No support, AI coded:** like the rest of 86Box-Next, this is written with
+**No support, AI coded:** like the rest of 86Box-Next2, this is written with
 AI help and comes as it is.
 
 ## What it speaks
@@ -51,7 +51,7 @@ in its log; from then on everyone logs in. The super admin adds **admins**
 ## Running it
 
 - **Windows**: `isp-server.exe` (in this repository's releases and
-  86Box-Next's). It is a window with the log that minimizes to the
+  86Box-Next2's). It is a window with the log that minimizes to the
   notification area.
 - **Linux**: a static binary, no libraries needed:
   `./isp-server --help`.
@@ -90,5 +90,5 @@ ctest --test-dir build
 --output out .` gives the static Linux binary instead.
 
 `voice/modem_voice.c` and `include/86box/modem_voice.h` are copies of
-86Box-Next's (the modems' voice frames, which the exchange and the
+86Box-Next2's (the modems' voice frames, which the exchange and the
 browser phone speak): keep them in step with it.

@@ -218,7 +218,7 @@ main(void)
     printf("== isp-server's status page, no users: this machine ==\n");
 
     check("the page, asked for as 127.0.0.1",
-          (ask("GET", "/", "127.0.0.1:2324", 0, "", body, sizeof(body)) == 200) && strstr(body, "86Box-Next ISP") &&
+          (ask("GET", "/", "127.0.0.1:2324", 0, "", body, sizeof(body)) == 200) && strstr(body, "86Box-Next2 ISP") &&
           strstr(body, "/api/status"));
     check("...or as localhost", ask("GET", "/", "localhost:2324", 0, "", NULL, 0) == 200);
     check("refused by any other name (DNS rebinding)", ask("GET", "/api/status", "evil.example:2324", 0, "", NULL, 0) == 403);

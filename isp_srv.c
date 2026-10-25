@@ -378,7 +378,7 @@ isp_srv_save(void)
     isp_mutex_lock(srv_lock);
     f = fopen(cfg.ini, "w");
     if (f != NULL) {
-        fprintf(f, "# isp-server: the 86Box-Next virtual ISP.  Written by the status page.\n"
+        fprintf(f, "# isp-server: the 86Box-Next2 virtual ISP.  Written by the status page.\n"
                    "# It holds the dial-in accounts' passwords as they are (CHAP needs them)\n"
                    "# and the page users' password hashes: keep it to yourself.\n"
                    "[isp]\n");
