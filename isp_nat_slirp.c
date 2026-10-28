@@ -46,6 +46,17 @@
 #include "isp_plat.h"
 #include "isp_nat_slirp.h"
 
+/* libslirp before 4.9 (Debian trixie has 4.8): sockets are ints, the poll
+   callbacks are the fd ones and SlirpConfig goes up to version 5. */
+#if SLIRP_CHECK_VERSION(4, 9, 0)
+#    define NAT_SLIRP_CONFIG_VERSION 6
+#    define nat_pollfds_fill         slirp_pollfds_fill_socket
+#else
+typedef int slirp_os_socket;
+#    define NAT_SLIRP_CONFIG_VERSION 5
+#    define nat_pollfds_fill         slirp_pollfds_fill
+#endif
+
 #define ETH_HLEN    14
 #define ETH_P_IP    0x0800
 #define ETH_P_ARP   0x0806
@@ -236,8 +247,13 @@ static const SlirpCb nat_cb = {
     .timer_new              = nat_timer_new,
     .timer_free             = nat_timer_free,
     .timer_mod              = nat_timer_mod,
+#if SLIRP_CHECK_VERSION(4, 9, 0)
     .register_poll_socket   = nat_register_poll_socket,
     .unregister_poll_socket = nat_unregister_poll_socket,
+#else
+    .register_poll_fd       = nat_register_poll_socket,
+    .unregister_poll_fd     = nat_unregister_poll_socket,
+#endif
     .notify                 = nat_notify
 };
 
@@ -283,7 +299,7 @@ isp_nat_new(const isp_nat_config_t *cfg, char *err, size_t err_len)
         mtu = 576; /* every IPv4 host takes 576 (RFC 791); below it libslirp's MSS goes silly */
 
     const SlirpConfig sc = {
-        .version               = 6,
+        .version               = NAT_SLIRP_CONFIG_VERSION,
         .restricted            = 0,
         .in_enabled            = true,
         .vnetwork              = net,
@@ -496,7 +512,7 @@ isp_nat_run(isp_nat_t *nat, isp_wake_t *wake, uint32_t timeout_ms)
     nat->poll_n = 0;
 
     nat_run_timers(nat, &timeout_ms);
-    slirp_pollfds_fill_socket(nat->slirp, &timeout_ms, nat_add_poll, nat);
+    nat_pollfds_fill(nat->slirp, &timeout_ms, nat_add_poll, nat);
 
     tv.tv_sec  = (long) (timeout_ms / 1000);
     tv.tv_usec = (long) ((timeout_ms % 1000) * 1000);
@@ -570,7 +586,7 @@ isp_nat_run(isp_nat_t *nat, isp_wake_t *wake, uint32_t timeout_ms)
     nat->pfd[0].revents = 0;
 
     nat_run_timers(nat, &timeout_ms);
-    slirp_pollfds_fill_socket(nat->slirp, &timeout_ms, nat_add_poll, nat);
+    nat_pollfds_fill(nat->slirp, &timeout_ms, nat_add_poll, nat);
 
     ret = poll(nat->pfd, (nfds_t) nat->poll_n, (int) timeout_ms);
     if ((ret > 0) && (nat->pfd[0].revents & POLLIN))
